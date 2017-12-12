@@ -1,11 +1,10 @@
 FROM golang:1.9 as golang
 
-RUN go get -u github.com/kardianos/govendor && \
-    go get -u github.com/BonnierNews/logstash_exporter && \
-    cd $GOPATH/src/github.com/BonnierNews/logstash_exporter && \
-    govendor build +local
+RUN go get -u github.com/tgxworld/prometheus-logstash-exporter && \
+    cd $GOPATH/src/github.com/tgxworld/prometheus-logstash-exporter && \
+    go build
 
 FROM busybox:1.27.2-glibc
-COPY --from=golang /go/bin/logstash_exporter /
-EXPOSE 9198
-ENTRYPOINT ["/logstash_exporter"]
+COPY --from=golang /go/src/github.com/tgxworld/prometheus-logstash-exporter/prometheus-logstash-exporter /
+EXPOSE 9304
+ENTRYPOINT ["/prometheus-logstash-exporter"]
